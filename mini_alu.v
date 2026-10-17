@@ -6,8 +6,11 @@ module mini_alu (
     input  wire [2:0] op,
     output reg  [1:0] result,
     output reg        carry,
-    output reg        borrow
+    output reg        borrow,
+    output wire       zero
 );
+    // Zero describes the two-bit result, independently of carry and borrow.
+    assign zero = (result == 2'b00);
     always @(*) begin
         result = 2'b00;
         carry = 1'b0;

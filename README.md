@@ -14,6 +14,9 @@ O circuito é combinacional: não usa clock nem reset. As saídas dependem das e
 | result | Saída | 2 | Resultado |
 | carry | Saída | 1 | Vai um da soma; zero nas demais operações |
 | borrow | Saída | 1 | Empréstimo da subtração quando a < b; zero nas demais operações |
+| zero | Saída | 1 | Vale 1 quando result = 00, em qualquer operação |
+
+O indicador `zero` considera apenas os dois bits de `result`, independentemente de `carry` e `borrow`. Por exemplo, `3 + 1` produz `result = 00`, `carry = 1`, `borrow = 0` e `zero = 1`. Já `0 - 1` produz `result = 11` e `zero = 0`.
 
 | op | Operação | Exemplo com a=11 e b=01 | result | carry |
 | --- | --- | --- | --- | --- |

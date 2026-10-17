@@ -1,10 +1,18 @@
 # Registro de validação
 
+## Atualização: desenvolvimento da v2, etapa 6
+
+- Saída `zero` adicionada: vale 1 se os dois bits de `result` são zero, independentemente de carry e borrow.
+- O testbench verifica todas as saídas nas 128 combinações em duas ordens, incluindo soma com carry e resultado zero, subtração com empréstimo e operações lógicas e de deslocamento.
+- Referência para `zero`: resultado aritmético esperado módulo 4 igual a zero; não utiliza a saída do circuito para calcular o valor esperado.
+- Simulação desta etapa: pendente no GitHub Actions; resultado esperado `PASS: 256 checks`.
+- Síntese e atualização do esquema desta etapa: pendentes.
+
 ## Atualização: desenvolvimento da v2, etapa 5
 
 - SHR A adicionado em `111`: deslocamento lógico de uma posição à direita, inserindo zero e descartando o bit inferior. Ignora `b`; carry e borrow ficam zerados.
 - Referência do testbench: divisão inteira `a / 2`, exercitada com todos os valores de `b`; todas as oito operações são verificadas.
-- Simulação desta etapa: pendente no GitHub Actions; resultado esperado `PASS: 256 checks`.
+- Simulação da etapa 5: aprovada; o usuário forneceu `PASS: 256 checks` e encerramento normal em `tb_mini_alu.v:63`.
 - Síntese e atualização do esquema desta etapa: pendentes.
 
 ## Atualização: desenvolvimento da v2, etapa 4

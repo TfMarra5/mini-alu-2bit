@@ -3,11 +3,11 @@ module tb_mini_alu;
     reg [1:0] a, b;
     reg [2:0] op;
     wire [1:0] result;
-    wire carry, borrow;
-    reg expected_borrow;
+    wire carry, borrow, zero;
+    reg expected_borrow, expected_zero;
     integer ai, bi, oi, expected, tests, errors;
     mini_alu dut (.a(a), .b(b), .op(op), .result(result),
-                  .carry(carry), .borrow(borrow));
+                  .carry(carry), .borrow(borrow), .zero(zero));
 
     task check;
         begin
@@ -25,17 +25,19 @@ module tb_mini_alu;
                         expected_borrow = 1'b1;
                     end else expected = ai - bi;
                 end
-                5: expected = 3 - ai; // Two-bit complement, independent of b.
+                5: expected = 3 - ai; // Bitwise inversion of two bits, independent of b.
                 6: expected = (ai * 2) % 4; // Left shift with two-bit wrap.
                 7: expected = ai / 2; // Unsigned integer division, independent of b.
                 default: expected = 0;
             endcase
+            expected_zero = ((expected % 4) == 0);
             tests = tests + 1;
-            if ({borrow, carry, result} !== {expected_borrow, expected[2:0]}) begin
+            if ({zero, borrow, carry, result} !==
+                {expected_zero, expected_borrow, expected[2:0]}) begin
                 errors = errors + 1;
                 $display("FAIL a=%0d b=%0d op=%0d got=%b expected=%b",
-                         a, b, op, {borrow, carry, result},
-                         {expected_borrow, expected[2:0]});
+                         a, b, op, {zero, borrow, carry, result},
+                         {expected_zero, expected_borrow, expected[2:0]});
             end
         end
     endtask
