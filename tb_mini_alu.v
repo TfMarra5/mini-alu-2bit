@@ -3,25 +3,36 @@ module tb_mini_alu;
     reg [1:0] a, b;
     reg [2:0] op;
     wire [1:0] result;
-    wire carry;
+    wire carry, borrow;
+    reg expected_borrow;
     integer ai, bi, oi, expected, tests, errors;
-    mini_alu dut (.a(a), .b(b), .op(op), .result(result), .carry(carry));
+    mini_alu dut (.a(a), .b(b), .op(op), .result(result),
+                  .carry(carry), .borrow(borrow));
 
     task check;
         begin
             #1;
+            expected_borrow = 1'b0;
             case (oi)
                 0: expected = ai + bi;
                 1: expected = ai & bi;
                 2: expected = ai | bi;
                 3: expected = ai ^ bi;
+                4: begin
+                    // Independent unsigned reference: wrap negative differences.
+                    if (ai < bi) begin
+                        expected = ai + 4 - bi;
+                        expected_borrow = 1'b1;
+                    end else expected = ai - bi;
+                end
                 default: expected = 0;
             endcase
             tests = tests + 1;
-            if ({carry, result} !== expected[2:0]) begin
+            if ({borrow, carry, result} !== {expected_borrow, expected[2:0]}) begin
                 errors = errors + 1;
                 $display("FAIL a=%0d b=%0d op=%0d got=%b expected=%b",
-                         a, b, op, {carry, result}, expected[2:0]);
+                         a, b, op, {borrow, carry, result},
+                         {expected_borrow, expected[2:0]});
             end
         end
     endtask

@@ -12,7 +12,8 @@ O circuito é combinacional: não usa clock nem reset. As saídas dependem das e
 | b | Entrada | 2 | Segundo operando |
 | op | Entrada | 3 | Seleção da operação |
 | result | Saída | 2 | Resultado |
-| carry | Saída | 1 | Vai um da soma; zero nas operações lógicas |
+| carry | Saída | 1 | Vai um da soma; zero nas demais operações |
+| borrow | Saída | 1 | Empréstimo da subtração quando a < b; zero nas demais operações |
 
 | op | Operação | Exemplo com a=11 e b=01 | result | carry |
 | --- | --- | --- | --- | --- |
@@ -20,8 +21,11 @@ O circuito é combinacional: não usa clock nem reset. As saídas dependem das e
 | 001 | AND bit a bit | 11 AND 01 | 01 | 0 |
 | 010 | OR bit a bit | 11 OR 01 | 11 | 0 |
 | 011 | XOR bit a bit | 11 XOR 01 | 10 | 0 |
+| 100 | Subtração | 3 - 1 = 2 | 10 | 0 |
 
-Os códigos `100`, `101`, `110` e `111` estão reservados e produzem `result = 00` e `carry = 0`. Nesta etapa, `op` passa de 2 para 3 bits; as entradas que selecionam a operação precisam ser atualizadas. A imagem em `docs/mini-alu-schematic.png` corresponde à versão anterior.
+Os códigos `101`, `110` e `111` estão reservados e produzem `result = 00`, `carry = 0` e `borrow = 0`. A interface usa `op` de 3 bits e inclui a nova saída `borrow`. A imagem em `docs/mini-alu-schematic.png` corresponde à versão anterior.
+
+Na subtração, `result` representa `(a - b) módulo 4`; `borrow` vale 1 quando `a < b`. Por exemplo, `0 - 1` produz `result = 11`, `borrow = 1` e `carry = 0`. Em todas as linhas de exemplo da tabela, `borrow = 0`. Ele indica empréstimo, não um bit de sinal.
 
 Na soma, `{carry, result}` é o resultado completo de 3 bits, entre 0 e 6. `carry` não é um indicador de overflow com sinal.
 
@@ -37,7 +41,7 @@ Na soma, `{carry, result}` é o resultado completo de 3 bits, entre 0 e 6. `carr
 1. Crie um projeto em **Verilog to gates**, usando **Empty file**.
 2. Cole o conteúdo de `mini_alu.v` no editor, substituindo o exemplo inteiro.
 3. Clique em **synthesize** e confirme que o módulo construído é `mini_alu`.
-4. Teste as quatro linhas da tabela acima, ajustando os bits das entradas no circuito.
+4. Teste as cinco linhas da tabela acima e o caso `0 - 1`, ajustando os bits das entradas no circuito.
 5. Observe as portas e salve uma captura em `docs/` para documentar o resultado.
 
 O testbench é exclusivo para simulação: não o cole no arquivo que será sintetizado. A aparência e quantidade de portas dependem das otimizações da ferramenta. O esquema de portas não é um layout físico de fabricação.
