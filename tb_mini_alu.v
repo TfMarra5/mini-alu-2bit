@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 module tb_mini_alu;
-    reg [1:0] a, b, op;
+    reg [1:0] a, b;
+    reg [2:0] op;
     wire [1:0] result;
     wire carry;
     integer ai, bi, oi, expected, tests, errors;
@@ -14,6 +15,7 @@ module tb_mini_alu;
                 1: expected = ai & bi;
                 2: expected = ai | bi;
                 3: expected = ai ^ bi;
+                default: expected = 0;
             endcase
             tests = tests + 1;
             if ({carry, result} !== expected[2:0]) begin
@@ -29,16 +31,16 @@ module tb_mini_alu;
         $dumpvars(0, tb_mini_alu);
         tests = 0;
         errors = 0;
-        // All 64 combinations, plus reverse traversal to check transitions.
+        // All 128 combinations, plus reverse traversal to check transitions.
         for (ai = 0; ai < 4; ai = ai + 1)
             for (bi = 0; bi < 4; bi = bi + 1)
-                for (oi = 0; oi < 4; oi = oi + 1) begin
+                for (oi = 0; oi < 8; oi = oi + 1) begin
                     a = ai; b = bi; op = oi;
                     check;
                 end
         for (ai = 3; ai >= 0; ai = ai - 1)
             for (bi = 3; bi >= 0; bi = bi - 1)
-                for (oi = 3; oi >= 0; oi = oi - 1) begin
+                for (oi = 7; oi >= 0; oi = oi - 1) begin
                     a = ai; b = bi; op = oi;
                     check;
                 end

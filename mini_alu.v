@@ -1,8 +1,8 @@
-// 2-bit combinational ALU: 00 ADD, 01 AND, 10 OR, 11 XOR.
+// 2-bit ALU: 000 ADD, 001 AND, 010 OR, 011 XOR; 100-111 reserved.
 module mini_alu (
     input  wire [1:0] a,
     input  wire [1:0] b,
-    input  wire [1:0] op,
+    input  wire [2:0] op,
     output reg  [1:0] result,
     output reg        carry
 );
@@ -10,10 +10,10 @@ module mini_alu (
         result = 2'b00;
         carry = 1'b0;
         case (op)
-            2'b00: {carry, result} = {1'b0, a} + {1'b0, b};
-            2'b01: result = a & b;
-            2'b10: result = a | b;
-            2'b11: result = a ^ b;
+            3'b000: {carry, result} = {1'b0, a} + {1'b0, b};
+            3'b001: result = a & b;
+            3'b010: result = a | b;
+            3'b011: result = a ^ b;
             default: begin
                 result = 2'b00;
                 carry = 1'b0;
