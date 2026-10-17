@@ -1,10 +1,17 @@
 # Registro de validação
 
+## Atualização: desenvolvimento da v2, etapa 4
+
+- SHL A adicionado em `110`: deslocamento de uma posição à esquerda, inserindo zero e descartando o bit superior. Ignora `b`; carry e borrow ficam zerados.
+- Referência do testbench: `(a * 2) % 4`, exercitada com todos os valores de `b`; operações anteriores e código reservado `111` continuam verificados.
+- Simulação desta etapa: pendente no GitHub Actions; resultado esperado `PASS: 256 checks`.
+- Síntese e atualização do esquema desta etapa: pendentes.
+
 ## Atualização: desenvolvimento da v2, etapa 3
 
 - NOT A adicionado em `101`: inversão dos dois bits de `a`, independente de `b`, com carry e borrow zerados.
 - Referência do testbench: `3 - a`, verificada para todos os valores de `a` e `b`, mantendo os testes das operações anteriores e dos códigos reservados `110` e `111`.
-- Simulação desta etapa: pendente no GitHub Actions; resultado esperado `PASS: 256 checks`.
+- Simulação da etapa 3: aprovada; o usuário forneceu `PASS: 256 checks` e encerramento normal em `tb_mini_alu.v:61`.
 - Síntese e atualização do esquema desta etapa: pendentes.
 
 ## Atualização: desenvolvimento da v2, etapa 2

@@ -26,6 +26,7 @@ module tb_mini_alu;
                     end else expected = ai - bi;
                 end
                 5: expected = 3 - ai; // Two-bit complement, independent of b.
+                6: expected = (ai * 2) % 4; // Left shift with two-bit wrap.
                 default: expected = 0;
             endcase
             tests = tests + 1;

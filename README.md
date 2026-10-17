@@ -23,8 +23,11 @@ O circuito é combinacional: não usa clock nem reset. As saídas dependem das e
 | 011 | XOR bit a bit | 11 XOR 01 | 10 | 0 |
 | 100 | Subtração | 3 - 1 = 2 | 10 | 0 |
 | 101 | NOT A bit a bit | NOT 11 | 00 | 0 |
+| 110 | Deslocamento de A à esquerda | 11 << 1 | 10 | 0 |
 
-Os códigos `110` e `111` estão reservados e produzem `result = 00`, `carry = 0` e `borrow = 0`. A interface usa `op` de 3 bits e inclui a nova saída `borrow`. A imagem em `docs/mini-alu-schematic.png` corresponde à versão anterior.
+O código `111` está reservado e produz `result = 00`, `carry = 0` e `borrow = 0`. A interface usa `op` de 3 bits e inclui a nova saída `borrow`. O esquema salvo da versão 1 não representa as operações novas.
+
+SHL A desloca `a` uma posição à esquerda, insere zero à direita e descarta o bit mais significativo: `00 → 00`, `01 → 10`, `10 → 00`, `11 → 10`. A operação ignora `b` e mantém `carry` e `borrow` em zero; não é uma rotação nem usa `b` como quantidade de deslocamento.
 
 NOT A inverte os dois bits de `a` e ignora `b`: `00 → 11`, `01 → 10`, `10 → 01`, `11 → 00`. `carry` e `borrow` ficam em zero. É uma inversão bit a bit (`~a`), não uma negação lógica (`!a`). Os testes exercitam cada valor de `a` com todos os valores de `b`.
 
@@ -44,7 +47,7 @@ Na soma, `{carry, result}` é o resultado completo de 3 bits, entre 0 e 6. `carr
 1. Crie um projeto em **Verilog to gates**, usando **Empty file**.
 2. Cole o conteúdo de `mini_alu.v` no editor, substituindo o exemplo inteiro.
 3. Clique em **synthesize** e confirme que o módulo construído é `mini_alu`.
-4. Teste as seis linhas da tabela acima e o caso `0 - 1`, ajustando os bits das entradas no circuito.
+4. Teste as sete linhas da tabela acima e o caso `0 - 1`, ajustando os bits das entradas no circuito.
 5. Observe as portas e salve uma captura em `docs/` para documentar o resultado.
 
 O testbench é exclusivo para simulação: não o cole no arquivo que será sintetizado. A aparência e quantidade de portas dependem das otimizações da ferramenta. O esquema de portas não é um layout físico de fabricação.

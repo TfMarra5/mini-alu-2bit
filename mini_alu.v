@@ -1,5 +1,5 @@
 // 2-bit ALU: 000 ADD, 001 AND, 010 OR, 011 XOR, 100 SUB, 101 NOT A.
-// 110-111 reserved. NOT A ignores b and clears carry and borrow.
+// 110 SHL A by one bit; 111 reserved. Unary operations ignore b.
 module mini_alu (
     input  wire [1:0] a,
     input  wire [1:0] b,
@@ -22,6 +22,7 @@ module mini_alu (
                 borrow = (a < b);
             end
             3'b101: result = ~a;
+            3'b110: result = {a[0], 1'b0}; // Discard a[1]; flags stay zero.
             default: begin
                 result = 2'b00;
                 carry = 1'b0;
