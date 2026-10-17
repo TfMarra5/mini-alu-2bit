@@ -1,11 +1,18 @@
 # Registro de validação
 
+## Atualização: desenvolvimento da v2, etapa 3
+
+- NOT A adicionado em `101`: inversão dos dois bits de `a`, independente de `b`, com carry e borrow zerados.
+- Referência do testbench: `3 - a`, verificada para todos os valores de `a` e `b`, mantendo os testes das operações anteriores e dos códigos reservados `110` e `111`.
+- Simulação desta etapa: pendente no GitHub Actions; resultado esperado `PASS: 256 checks`.
+- Síntese e atualização do esquema desta etapa: pendentes.
+
 ## Atualização: desenvolvimento da v2, etapa 2
 
 - Subtração adicionada em `100`, com resultado módulo 4 e `borrow = 1` quando `a < b`.
 - `carry` permanece exclusivo da soma; `borrow` é zerado nas demais operações.
 - O testbench verifica resultado, carry e borrow nas 128 combinações, em duas ordens: 256 verificações esperadas. Inclui todos os casos de empréstimo e transições para operações sem empréstimo.
-- Simulação desta etapa: pendente de execução no GitHub Actions. O sucesso da etapa 1 não valida a nova subtração.
+- Simulação da etapa 2: aprovada no GitHub Actions; o usuário forneceu o log `PASS: 256 checks` com encerramento normal do testbench.
 - Síntese e atualização do esquema desta etapa: pendentes.
 
 ## Atualização: desenvolvimento da v2, etapa 1

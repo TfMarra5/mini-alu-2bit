@@ -22,8 +22,11 @@ O circuito é combinacional: não usa clock nem reset. As saídas dependem das e
 | 010 | OR bit a bit | 11 OR 01 | 11 | 0 |
 | 011 | XOR bit a bit | 11 XOR 01 | 10 | 0 |
 | 100 | Subtração | 3 - 1 = 2 | 10 | 0 |
+| 101 | NOT A bit a bit | NOT 11 | 00 | 0 |
 
-Os códigos `101`, `110` e `111` estão reservados e produzem `result = 00`, `carry = 0` e `borrow = 0`. A interface usa `op` de 3 bits e inclui a nova saída `borrow`. A imagem em `docs/mini-alu-schematic.png` corresponde à versão anterior.
+Os códigos `110` e `111` estão reservados e produzem `result = 00`, `carry = 0` e `borrow = 0`. A interface usa `op` de 3 bits e inclui a nova saída `borrow`. A imagem em `docs/mini-alu-schematic.png` corresponde à versão anterior.
+
+NOT A inverte os dois bits de `a` e ignora `b`: `00 → 11`, `01 → 10`, `10 → 01`, `11 → 00`. `carry` e `borrow` ficam em zero. É uma inversão bit a bit (`~a`), não uma negação lógica (`!a`). Os testes exercitam cada valor de `a` com todos os valores de `b`.
 
 Na subtração, `result` representa `(a - b) módulo 4`; `borrow` vale 1 quando `a < b`. Por exemplo, `0 - 1` produz `result = 11`, `borrow = 1` e `carry = 0`. Em todas as linhas de exemplo da tabela, `borrow = 0`. Ele indica empréstimo, não um bit de sinal.
 
@@ -41,7 +44,7 @@ Na soma, `{carry, result}` é o resultado completo de 3 bits, entre 0 e 6. `carr
 1. Crie um projeto em **Verilog to gates**, usando **Empty file**.
 2. Cole o conteúdo de `mini_alu.v` no editor, substituindo o exemplo inteiro.
 3. Clique em **synthesize** e confirme que o módulo construído é `mini_alu`.
-4. Teste as cinco linhas da tabela acima e o caso `0 - 1`, ajustando os bits das entradas no circuito.
+4. Teste as seis linhas da tabela acima e o caso `0 - 1`, ajustando os bits das entradas no circuito.
 5. Observe as portas e salve uma captura em `docs/` para documentar o resultado.
 
 O testbench é exclusivo para simulação: não o cole no arquivo que será sintetizado. A aparência e quantidade de portas dependem das otimizações da ferramenta. O esquema de portas não é um layout físico de fabricação.

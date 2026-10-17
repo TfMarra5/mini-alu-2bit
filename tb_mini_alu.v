@@ -25,6 +25,7 @@ module tb_mini_alu;
                         expected_borrow = 1'b1;
                     end else expected = ai - bi;
                 end
+                5: expected = 3 - ai; // Two-bit complement, independent of b.
                 default: expected = 0;
             endcase
             tests = tests + 1;
