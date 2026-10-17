@@ -1,5 +1,21 @@
 # Mini ALU de 2 bits
 
+## Version 2 — validation and demonstrations
+
+The eight-operation Verilog ALU passed 256 checks in GitHub Actions (128 binary input combinations, traversed in both directions). Results and all three flags are checked. See [validation log](docs/validation.md) for evidence and limitations.
+
+### Vulkos gate schematic
+
+![Version 2 gate schematic](docs/mini-alu-v2-schematic.png)
+
+The [version 1 schematic](docs/mini-alu-v1-schematic.png) is preserved for comparison. These images show logic, not a physical manufacturing layout.
+
+### Wokwi interactive demonstration
+
+![Wokwi demonstration with ZERO illuminated](docs/mini-alu-v2-wokwi-demo.png)
+
+The separate C behavioral model in [wokwi/](wokwi/README.md) provides seven switches and five output LEDs. It does not execute the Verilog source. The screenshot documents the initial zero-input state; exhaustive RTL tests do not establish equivalence of this C model. Setup files are included so the demonstration can be reproduced.
+
 Projeto educacional de uma unidade lógica e aritmética em Verilog para explorar a transformação de código em portas lógicas no Vulkos.
 
 ## Funcionamento

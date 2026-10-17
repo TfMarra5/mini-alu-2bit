@@ -1,11 +1,21 @@
 # Registro de validação
 
+## Version 2 — final functional validation
+
+- GitHub Actions: user-provided final log reports `PASS: 256 checks`, followed by normal `$finish` at `tb_mini_alu.v:65`.
+- Coverage: all 128 binary input combinations tested in both directions, checking result, carry, borrow and zero across eight operations.
+- Vulkos: updated gate view generated. User screenshots show 3 + 1 yielding result=0, carry=1, borrow=0, zero=1; and 0 - 1 yielding result=3, carry=0, borrow=1, zero=0.
+- Wokwi: separate C behavioral model loaded and running; screenshot shows ZERO illuminated in the initial zero-input state. Other Wokwi vectors and automated equivalence against RTL remain unverified.
+- Images: `mini-alu-v1-schematic.png`, `mini-alu-v2-schematic.png`, `mini-alu-v2-wokwi-demo.png`.
+- Physical layout, timing signoff and fabrication are outside this version's scope. Branch merge and release tagging are still pending.
+- Earlier pending entries below are historical development notes, superseded by this summary where applicable.
+
 ## Atualização: desenvolvimento da v2, etapa 6
 
 - Saída `zero` adicionada: vale 1 se os dois bits de `result` são zero, independentemente de carry e borrow.
 - O testbench verifica todas as saídas nas 128 combinações em duas ordens, incluindo soma com carry e resultado zero, subtração com empréstimo e operações lógicas e de deslocamento.
 - Referência para `zero`: resultado aritmético esperado módulo 4 igual a zero; não utiliza a saída do circuito para calcular o valor esperado.
-- Simulação desta etapa: pendente no GitHub Actions; resultado esperado `PASS: 256 checks`.
+- Simulação da etapa 6: aprovada pelo log final fornecido pelo usuário, `PASS: 256 checks`.
 - Síntese e atualização do esquema desta etapa: pendentes.
 
 ## Atualização: desenvolvimento da v2, etapa 5
