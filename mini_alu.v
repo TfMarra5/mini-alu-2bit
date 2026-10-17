@@ -1,19 +1,32 @@
-// 2-bit combinational ALU: 00 ADD, 01 AND, 10 OR, 11 XOR.
+// 2-bit ALU: 000 ADD, 001 AND, 010 OR, 011 XOR, 100 SUB, 101 NOT A.
+// 110 SHL A, 111 SHR A, both by one bit. Unary operations ignore b.
 module mini_alu (
     input  wire [1:0] a,
     input  wire [1:0] b,
-    input  wire [1:0] op,
+    input  wire [2:0] op,
     output reg  [1:0] result,
-    output reg        carry
+    output reg        carry,
+    output reg        borrow,
+    output wire       zero
 );
+    // Zero describes the two-bit result, independently of carry and borrow.
+    assign zero = (result == 2'b00);
     always @(*) begin
         result = 2'b00;
         carry = 1'b0;
+        borrow = 1'b0;
         case (op)
-            2'b00: {carry, result} = {1'b0, a} + {1'b0, b};
-            2'b01: result = a & b;
-            2'b10: result = a | b;
-            2'b11: result = a ^ b;
+            3'b000: {carry, result} = {1'b0, a} + {1'b0, b};
+            3'b001: result = a & b;
+            3'b010: result = a | b;
+            3'b011: result = a ^ b;
+            3'b100: begin
+                result = a - b; // Low two bits: subtraction modulo 4.
+                borrow = (a < b);
+            end
+            3'b101: result = ~a;
+            3'b110: result = {a[0], 1'b0}; // Discard a[1]; flags stay zero.
+            3'b111: result = {1'b0, a[1]}; // Discard a[0]; flags stay zero.
             default: begin
                 result = 2'b00;
                 carry = 1'b0;

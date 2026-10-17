@@ -1,0 +1,5 @@
+{
+  "name": "Mini ALU v2",
+  "author": "TfMarra5",
+  "pins": ["A0", "A1", "B0", "B1", "OP0", "OP1", "OP2", "", "", "ZERO", "BORROW", "CARRY", "R1", "R0"]
+}
