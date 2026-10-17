@@ -1,12 +1,16 @@
 `timescale 1ns/1ps
-module tb_mini_alu;
-    reg [1:0] a, b;
+module tb_mini_alu #(
+    parameter integer WIDTH = 2
+);
+    // Exhaustive testbench limited to small widths; RTL is independently parameterized.
+    localparam integer LIMIT = 1 << WIDTH;
+    reg [WIDTH-1:0] a, b;
     reg [2:0] op;
-    wire [1:0] result;
+    wire [WIDTH-1:0] result;
     wire carry, borrow, zero;
     reg expected_borrow, expected_zero;
     integer ai, bi, oi, expected, tests, errors;
-    mini_alu dut (.a(a), .b(b), .op(op), .result(result),
+    mini_alu #(.WIDTH(WIDTH)) dut (.a(a), .b(b), .op(op), .result(result),
                   .carry(carry), .borrow(borrow), .zero(zero));
 
     task check;
@@ -21,46 +25,54 @@ module tb_mini_alu;
                 4: begin
                     // Independent unsigned reference: wrap negative differences.
                     if (ai < bi) begin
-                        expected = ai + 4 - bi;
+                        expected = ai + LIMIT - bi;
                         expected_borrow = 1'b1;
                     end else expected = ai - bi;
                 end
-                5: expected = 3 - ai; // Bitwise inversion of two bits, independent of b.
-                6: expected = (ai * 2) % 4; // Left shift with two-bit wrap.
+                5: expected = LIMIT - 1 - ai; // Bitwise inversion, independent of b.
+                6: expected = (ai * 2) % LIMIT; // Left shift with WIDTH-bit wrap.
                 7: expected = ai / 2; // Unsigned integer division, independent of b.
                 default: expected = 0;
             endcase
-            expected_zero = ((expected % 4) == 0);
+            expected_zero = ((expected % LIMIT) == 0);
             tests = tests + 1;
             if ({zero, borrow, carry, result} !==
-                {expected_zero, expected_borrow, expected[2:0]}) begin
+                {expected_zero, expected_borrow, expected[WIDTH:0]}) begin
                 errors = errors + 1;
                 $display("FAIL a=%0d b=%0d op=%0d got=%b expected=%b",
                          a, b, op, {zero, borrow, carry, result},
-                         {expected_zero, expected_borrow, expected[2:0]});
+                         {expected_zero, expected_borrow, expected[WIDTH:0]});
             end
         end
     endtask
 
     initial begin
-        $dumpfile("mini_alu.vcd");
-        $dumpvars(0, tb_mini_alu);
+        if (WIDTH < 1 || WIDTH > 8)
+            $fatal(1, "Exhaustive testbench supports WIDTH from 1 through 8");
+        // Waveforms are optional to avoid large files for the 8-bit run.
+        if ($test$plusargs("dump")) begin
+            $dumpfile("mini_alu.vcd");
+            $dumpvars(0, tb_mini_alu);
+        end
         tests = 0;
         errors = 0;
-        // All 128 combinations, plus reverse traversal to check transitions.
-        for (ai = 0; ai < 4; ai = ai + 1)
-            for (bi = 0; bi < 4; bi = bi + 1)
+        // All binary input combinations, traversed in both directions.
+        for (ai = 0; ai < LIMIT; ai = ai + 1)
+            for (bi = 0; bi < LIMIT; bi = bi + 1)
                 for (oi = 0; oi < 8; oi = oi + 1) begin
                     a = ai; b = bi; op = oi;
                     check;
                 end
-        for (ai = 3; ai >= 0; ai = ai - 1)
-            for (bi = 3; bi >= 0; bi = bi - 1)
+        for (ai = LIMIT - 1; ai >= 0; ai = ai - 1)
+            for (bi = LIMIT - 1; bi >= 0; bi = bi - 1)
                 for (oi = 7; oi >= 0; oi = oi - 1) begin
                     a = ai; b = bi; op = oi;
                     check;
                 end
         if (errors != 0) $fatal(1, "%0d failures", errors);
+        if (tests != 16 * LIMIT * LIMIT)
+            $fatal(1, "Unexpected number of checks: %0d", tests);
+        $display("WIDTH=%0d", WIDTH);
         $display("PASS: %0d checks", tests);
         $finish;
     end

@@ -6,7 +6,22 @@ Step 1 introduces the integer parameter `WIDTH` (minimum 1, default 2). Operand 
 
 Existing instances that omit the parameter still use 2 bits. For example, `mini_alu #(.WIDTH(4))` selects 4-bit ports, which must be connected to signals of the matching width.
 
-Validation for this step is pending. The existing 256-check testbench is intentionally retained to verify backward compatibility at the default width. Tests for 4 and 8 bits will be added in the next step. The v2 screenshots and Wokwi C model below remain 2-bit demonstrations.
+Step 1 passed the original 256-check regression at the default width. Step 2 parameterizes the testbench and adds a GitHub Actions matrix; execution of these new tests is pending. The v2 screenshots and Wokwi C model below remain 2-bit demonstrations.
+
+| WIDTH | Unique input combinations | Checks in both directions |
+| --- | --- | --- |
+| 2 | 128 | 256 |
+| 4 | 2,048 | 4,096 |
+| 8 | 524,288 | 1,048,576 |
+
+To test 4 bits locally (replace 4 with 2 or 8 as needed):
+
+```sh
+iverilog -g2012 -Wall -s tb_mini_alu -Ptb_mini_alu.WIDTH=4 -o sim mini_alu.v tb_mini_alu.v
+vvp sim
+```
+
+Use `vvp sim +dump` to generate `mini_alu.vcd`; waveform output is disabled by default to limit file size. The exhaustive testbench supports widths 1 through 8. No validation is claimed for larger widths.
 
 ## Version 2 — validation and demonstrations
 
@@ -91,7 +106,7 @@ iverilog -g2012 -Wall -s tb_mini_alu -o sim mini_alu.v tb_mini_alu.v
 vvp sim
 ```
 
-O resultado esperado é `PASS: 256 checks`. A simulação também gera `mini_alu.vcd`, que pode ser aberto em um visualizador de formas de onda. Uma divergência encerra a simulação com erro.
+Para a largura padrão de 2 bits, o resultado esperado é `PASS: 256 checks`. Use `vvp sim +dump` para gerar `mini_alu.vcd` e abrir em um visualizador de formas de onda. Uma divergência encerra a simulação com erro.
 
 ## Publicação no GitHub
 

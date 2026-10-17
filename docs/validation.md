@@ -1,12 +1,20 @@
 # Registro de validação
 
+## Version 3 — step 2: width test matrix
+
+- Parameterized testbench reference calculations, ports and exhaustive traversal.
+- GitHub Actions now runs separate 2-, 4- and 8-bit jobs, with expected totals of 256, 4,096 and 1,048,576 checks. Each binary combination is checked twice.
+- Checks cover result, carry, borrow and zero for all operations. Testbench checks its iteration count and rejects widths outside 1–8 to bound exhaustive runtime.
+- Waveform generation is opt-in using `vvp sim +dump`.
+- Simulation of this updated testbench and the wider configurations is pending in GitHub Actions; no local HDL simulator is available.
+
 ## Version 3 — step 1: configurable width
 
 - Started from main at merge commit `c38fb0c`, on branch `feature/alu-v3`.
 - Added `WIDTH = 2`; operands, result, zero detection and shifts now use the configured width. WIDTH must be a positive integer.
 - Preserved operation codes and carry/borrow/zero semantics.
 - Existing testbench retained without changes to check default-width backward compatibility.
-- HDL simulation pending in GitHub Actions (expected: `PASS: 256 checks`). No local Icarus Verilog executable is available.
+- Default-width compatibility passed: user provided the GitHub Actions log `PASS: 256 checks` with normal termination at `tb_mini_alu.v:65`.
 - Four- and eight-bit regression tests and Vulkos comparison are deferred to the next steps; no validation claim is made for these widths yet.
 
 ## Version 2 — final functional validation

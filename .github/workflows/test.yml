@@ -4,12 +4,17 @@ permissions:
   contents: read
 jobs:
   simulation:
+    name: simulation (${{ matrix.width }} bits)
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        width: [2, 4, 8]
     steps:
       - uses: actions/checkout@v4
       - name: Install Icarus Verilog
         run: sudo apt-get update && sudo apt-get install -y iverilog
       - name: Compile
-        run: iverilog -g2012 -Wall -s tb_mini_alu -o sim mini_alu.v tb_mini_alu.v
+        run: iverilog -g2012 -Wall -s tb_mini_alu -Ptb_mini_alu.WIDTH=${{ matrix.width }} -o sim mini_alu.v tb_mini_alu.v
       - name: Run tests
         run: vvp sim
