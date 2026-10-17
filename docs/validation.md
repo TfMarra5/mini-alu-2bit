@@ -1,5 +1,14 @@
 # Registro de validação
 
+## Version 3 — step 1: configurable width
+
+- Started from main at merge commit `c38fb0c`, on branch `feature/alu-v3`.
+- Added `WIDTH = 2`; operands, result, zero detection and shifts now use the configured width. WIDTH must be a positive integer.
+- Preserved operation codes and carry/borrow/zero semantics.
+- Existing testbench retained without changes to check default-width backward compatibility.
+- HDL simulation pending in GitHub Actions (expected: `PASS: 256 checks`). No local Icarus Verilog executable is available.
+- Four- and eight-bit regression tests and Vulkos comparison are deferred to the next steps; no validation claim is made for these widths yet.
+
 ## Version 2 — final functional validation
 
 - GitHub Actions: user-provided final log reports `PASS: 256 checks`, followed by normal `$finish` at `tb_mini_alu.v:65`.

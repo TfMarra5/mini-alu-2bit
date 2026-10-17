@@ -1,18 +1,21 @@
-// 2-bit ALU: 000 ADD, 001 AND, 010 OR, 011 XOR, 100 SUB, 101 NOT A.
+// Configurable unsigned ALU (WIDTH >= 1; default 2).
+// 000 ADD, 001 AND, 010 OR, 011 XOR, 100 SUB, 101 NOT A.
 // 110 SHL A, 111 SHR A, both by one bit. Unary operations ignore b.
-module mini_alu (
-    input  wire [1:0] a,
-    input  wire [1:0] b,
+module mini_alu #(
+    parameter integer WIDTH = 2
+) (
+    input  wire [WIDTH-1:0] a,
+    input  wire [WIDTH-1:0] b,
     input  wire [2:0] op,
-    output reg  [1:0] result,
+    output reg  [WIDTH-1:0] result,
     output reg        carry,
     output reg        borrow,
     output wire       zero
 );
-    // Zero describes the two-bit result, independently of carry and borrow.
-    assign zero = (result == 2'b00);
+    // Zero describes result only, independently of carry and borrow.
+    assign zero = (result == {WIDTH{1'b0}});
     always @(*) begin
-        result = 2'b00;
+        result = {WIDTH{1'b0}};
         carry = 1'b0;
         borrow = 1'b0;
         case (op)
@@ -21,14 +24,14 @@ module mini_alu (
             3'b010: result = a | b;
             3'b011: result = a ^ b;
             3'b100: begin
-                result = a - b; // Low two bits: subtraction modulo 4.
+                result = a - b; // Low WIDTH bits: subtraction modulo 2**WIDTH.
                 borrow = (a < b);
             end
             3'b101: result = ~a;
-            3'b110: result = {a[0], 1'b0}; // Discard a[1]; flags stay zero.
-            3'b111: result = {1'b0, a[1]}; // Discard a[0]; flags stay zero.
+            3'b110: result = a << 1; // Discard top bit; flags stay zero.
+            3'b111: result = a >> 1; // Unsigned logical shift; flags stay zero.
             default: begin
-                result = 2'b00;
+                result = {WIDTH{1'b0}};
                 carry = 1'b0;
             end
         endcase

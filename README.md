@@ -1,5 +1,13 @@
 # Mini ALU de 2 bits
 
+## Version 3 — in development
+
+Step 1 introduces the integer parameter `WIDTH` (minimum 1, default 2). Operand and result ports use WIDTH bits; the operation selector remains 3 bits. Addition preserves an extra carry bit, subtraction wraps modulo 2^WIDTH, and shifts move by one position with zero fill. Flag meanings remain unchanged.
+
+Existing instances that omit the parameter still use 2 bits. For example, `mini_alu #(.WIDTH(4))` selects 4-bit ports, which must be connected to signals of the matching width.
+
+Validation for this step is pending. The existing 256-check testbench is intentionally retained to verify backward compatibility at the default width. Tests for 4 and 8 bits will be added in the next step. The v2 screenshots and Wokwi C model below remain 2-bit demonstrations.
+
 ## Version 2 — validation and demonstrations
 
 The eight-operation Verilog ALU passed 256 checks in GitHub Actions (128 binary input combinations, traversed in both directions). Results and all three flags are checked. See [validation log](docs/validation.md) for evidence and limitations.
