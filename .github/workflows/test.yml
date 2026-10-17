@@ -1,0 +1,15 @@
+name: Test Verilog
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  simulation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Icarus Verilog
+        run: sudo apt-get update && sudo apt-get install -y iverilog
+      - name: Compile
+        run: iverilog -g2012 -Wall -s tb_mini_alu -o sim mini_alu.v tb_mini_alu.v
+      - name: Run tests
+        run: vvp sim
