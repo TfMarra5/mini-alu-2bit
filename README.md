@@ -24,8 +24,11 @@ O circuito é combinacional: não usa clock nem reset. As saídas dependem das e
 | 100 | Subtração | 3 - 1 = 2 | 10 | 0 |
 | 101 | NOT A bit a bit | NOT 11 | 00 | 0 |
 | 110 | Deslocamento de A à esquerda | 11 << 1 | 10 | 0 |
+| 111 | Deslocamento de A à direita | 11 >> 1 | 01 | 0 |
 
-O código `111` está reservado e produz `result = 00`, `carry = 0` e `borrow = 0`. A interface usa `op` de 3 bits e inclui a nova saída `borrow`. O esquema salvo da versão 1 não representa as operações novas.
+Todos os oito códigos de `op` têm uma operação definida. A interface usa `op` de 3 bits e inclui a nova saída `borrow`. O esquema salvo da versão 1 não representa as operações novas.
+
+SHR A desloca `a` uma posição à direita, insere zero à esquerda e descarta o bit menos significativo: `00 → 00`, `01 → 00`, `10 → 01`, `11 → 01`. É um deslocamento lógico sem sinal, não uma rotação. Ignora `b` e mantém `carry` e `borrow` em zero.
 
 SHL A desloca `a` uma posição à esquerda, insere zero à direita e descarta o bit mais significativo: `00 → 00`, `01 → 10`, `10 → 00`, `11 → 10`. A operação ignora `b` e mantém `carry` e `borrow` em zero; não é uma rotação nem usa `b` como quantidade de deslocamento.
 
@@ -47,7 +50,7 @@ Na soma, `{carry, result}` é o resultado completo de 3 bits, entre 0 e 6. `carr
 1. Crie um projeto em **Verilog to gates**, usando **Empty file**.
 2. Cole o conteúdo de `mini_alu.v` no editor, substituindo o exemplo inteiro.
 3. Clique em **synthesize** e confirme que o módulo construído é `mini_alu`.
-4. Teste as sete linhas da tabela acima e o caso `0 - 1`, ajustando os bits das entradas no circuito.
+4. Teste as oito linhas da tabela acima e o caso `0 - 1`, ajustando os bits das entradas no circuito.
 5. Observe as portas e salve uma captura em `docs/` para documentar o resultado.
 
 O testbench é exclusivo para simulação: não o cole no arquivo que será sintetizado. A aparência e quantidade de portas dependem das otimizações da ferramenta. O esquema de portas não é um layout físico de fabricação.

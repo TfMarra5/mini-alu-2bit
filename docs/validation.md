@@ -1,10 +1,17 @@
 # Registro de validação
 
+## Atualização: desenvolvimento da v2, etapa 5
+
+- SHR A adicionado em `111`: deslocamento lógico de uma posição à direita, inserindo zero e descartando o bit inferior. Ignora `b`; carry e borrow ficam zerados.
+- Referência do testbench: divisão inteira `a / 2`, exercitada com todos os valores de `b`; todas as oito operações são verificadas.
+- Simulação desta etapa: pendente no GitHub Actions; resultado esperado `PASS: 256 checks`.
+- Síntese e atualização do esquema desta etapa: pendentes.
+
 ## Atualização: desenvolvimento da v2, etapa 4
 
 - SHL A adicionado em `110`: deslocamento de uma posição à esquerda, inserindo zero e descartando o bit superior. Ignora `b`; carry e borrow ficam zerados.
 - Referência do testbench: `(a * 2) % 4`, exercitada com todos os valores de `b`; operações anteriores e código reservado `111` continuam verificados.
-- Simulação desta etapa: pendente no GitHub Actions; resultado esperado `PASS: 256 checks`.
+- Simulação da etapa 4: aprovada; o usuário forneceu `PASS: 256 checks` e encerramento normal em `tb_mini_alu.v:62`.
 - Síntese e atualização do esquema desta etapa: pendentes.
 
 ## Atualização: desenvolvimento da v2, etapa 3
